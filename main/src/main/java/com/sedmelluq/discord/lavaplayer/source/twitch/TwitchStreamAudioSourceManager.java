@@ -22,6 +22,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -91,6 +92,7 @@ public class TwitchStreamAudioSourceManager implements AudioSourceManager, HttpC
       //The first one has the title of the broadcast
       JsonBrowser channelData = dataList.get(0);
       String status = channelData.get("title").text();
+      final String thumbnail = channelData.get("thumbnail_url").text().replace("-{width}x{height}.jpg", "-1920x1080.jpg");
 
       return new TwitchStreamAudioTrack(new AudioTrackInfo(
           status,
@@ -98,7 +100,8 @@ public class TwitchStreamAudioSourceManager implements AudioSourceManager, HttpC
           Long.MAX_VALUE,
           reference.identifier,
           true,
-          reference.identifier
+          reference.identifier,
+          Collections.singletonMap("artworkUrl", thumbnail)
       ), this);
     }
   }
